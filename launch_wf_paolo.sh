@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
-WF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-nextflow run "${WF_DIR}/main.nf" \
-    -c "${WF_DIR}/nextflow.config" \
-    -resume \
-    -with-report "${WF_DIR}/nextflow_report.html" \
-    -with-trace "${WF_DIR}/nextflow_trace.txt" \
-    -with-timeline "${WF_DIR}/nextflow_timeline.html" \
-    "$@"
+srun -p htc --time=0-02:00:00 -c 10 --ntasks-per-node 16 --mem 64G --pty bash
+
+module load Nextflow/24.10.4
+
+nextflow run "/g/schwab/marco/repos/requests/main.nf" \
+  --input_table "/g/schwab/marco/repos/requests/paolo_in.tsv" \
+  --outdir "/g/schwab/marco/omezarr_paolo"
+
